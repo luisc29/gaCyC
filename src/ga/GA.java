@@ -7,7 +7,7 @@ package ga;
 
 /**
  *
- * @author LCRUZDI
+ * @author luis
  */
 public class GA {
 
