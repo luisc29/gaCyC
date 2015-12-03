@@ -7,7 +7,7 @@ package ga;
 
 /**
  *
- * @author luis
+ * @author equipo1
  */
 public class GA {
 
