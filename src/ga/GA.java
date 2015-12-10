@@ -6,6 +6,9 @@
 package ga;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
@@ -13,6 +16,8 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -20,10 +25,9 @@ import java.util.Random;
 public class GA {
 
     static String inputFilename = "input.txt";
-    static String outputFilename = "output.txt";
     static int populationSize = 100;
     static int maxTransitions = 2000;
-    static int maxGenerations = 500;
+    static int maxGenerations = 200;
     static int tapeLength = 2000;
     static double pc = 0.95; // Crossover probability
     static double pm = 0.005; // Mutation probability
@@ -39,11 +43,27 @@ public class GA {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
+        String input = "";
+        do{
+            try {
+                run();
+                System.out.println("Desea ejecutar de nuevo? \n (S)i / (N)o");
+                
+                input = console.readLine();
+            } catch (IOException ex) {
+                Logger.getLogger(GA.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }while(input.equalsIgnoreCase("S"));
+             
+    }
+    
+    public static void run(){
         // TODO code application logic here
         BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
         
         try {
-                        
+            loadConfigs();
             setup(console);
             
             Random random = new Random(seed);
@@ -213,7 +233,7 @@ public class GA {
         }
         catch (Exception ex) {
             ex.printStackTrace();
-        }        
+        }   
     }
     
     public static void setup(BufferedReader console) throws IOException{
@@ -269,6 +289,8 @@ public class GA {
             if (populationSize % 2 == 1) {
                 populationSize++;
             }
+            
+            saveConfigs();
         }
     }
     
@@ -291,9 +313,10 @@ public class GA {
         System.out.println(pm);
         System.out.print("8. Semilla para generación de números aleatorios: ");
         System.out.println(seed);
-        System.out.print("9. Funcion de aptitud [1) Hamming 2) Suma Ponderada]: ");
+        System.out.print("9. Funcion de aptitud [1.Hamming 2.Suma Ponderada]: ");
         System.out.println(fitnessFunction);
     }
+    
     public static String getTarget(String inputFilename) throws IOException {
        
         byte[] bytes = Files.readAllBytes(Paths.get(inputFilename));
@@ -481,6 +504,63 @@ public class GA {
                     "...\t" + population[i].maxMatches + "\t" + population[i].fitness);
         }
         System.out.println("\n");
+    }
+    
+    public static void loadConfigs(){
+        String file = "config.txt";
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            inputFilename = br.readLine().split("=")[1];
+            populationSize = Integer.parseInt(br.readLine().split("=")[1]);
+            maxTransitions = Integer.parseInt(br.readLine().split("=")[1]);
+            maxGenerations = Integer.parseInt(br.readLine().split("=")[1]);
+            tapeLength = Integer.parseInt(br.readLine().split("=")[1]);
+            pc = Double.parseDouble(br.readLine().split("=")[1]);
+            pm = Double.parseDouble(br.readLine().split("=")[1]);
+            individualLength = Integer.parseInt(br.readLine().split("=")[1]);
+            seed = Integer.parseInt(br.readLine().split("=")[1]);
+            fitnessFunction = Integer.parseInt(br.readLine().split("=")[1]);
+            
+        }catch(Exception e){
+                    
+        }
+
+    }
+    
+    public static void saveConfigs(){
+        String fileName = "config.txt";
+
+        try {
+            FileWriter fileWriter = new FileWriter(fileName);
+
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+            bufferedWriter.write("inputFilename=" + inputFilename + "\n");
+            bufferedWriter.newLine();
+            bufferedWriter.write("populationSize=" + populationSize + "\n");
+            bufferedWriter.newLine();
+            bufferedWriter.write("maxTransations=" + maxTransitions + "\n");
+            bufferedWriter.newLine();
+            bufferedWriter.write("maxGenerations=" + maxGenerations + "\n");
+            bufferedWriter.newLine();
+            bufferedWriter.write("tapeLength=" + tapeLength + "\n");
+            bufferedWriter.newLine();
+            bufferedWriter.write("pc=" + pc + "\n");
+            bufferedWriter.newLine();
+            bufferedWriter.write("pm=" + pm + "\n");
+            bufferedWriter.newLine();
+            bufferedWriter.write("individualLength=" + individualLength + "\n");
+            bufferedWriter.newLine();
+            bufferedWriter.write("seed=" + seed + "\n");
+            bufferedWriter.newLine();
+            bufferedWriter.write("fitnessFunction=" + fitnessFunction + "\n");
+            bufferedWriter.newLine();
+           
+            bufferedWriter.close();
+        }
+        catch(Exception ex) {
+            
+        }
     }
 
 }
