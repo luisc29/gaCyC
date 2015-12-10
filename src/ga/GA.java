@@ -33,6 +33,7 @@ public class GA {
     static double weights[];
     static String emptyTape;
     static long seed = 54321;
+    static int fAptitud = 1;
     
     /**
      * @param args the command line arguments
@@ -215,24 +216,8 @@ public class GA {
     }
     
     public static void setup(BufferedReader console) throws IOException{
-        System.out.println("*********   Estimación de la Complejidad de Kolmogorov mediante Algoritmos Geneticos   *********     \n");
-        System.out.println("-- Parámetros del programa --");
-        System.out.print("1. Nombre del archivo de entrada: ");
-        System.out.println(inputFilename);
-        System.out.print("2. Tamaño de la población: ");
-        System.out.println(populationSize);
-        System.out.print("3. Máximo número de generaciones: ");
-        System.out.println(maxGenerations);
-        System.out.print("4. Número máximo de transiciones: ");
-        System.out.println(maxTransitions);
-        System.out.print("5. Tamaño de la cinta: ");
-        System.out.println(tapeLength);
-        System.out.print("6. Probabilidad de cruza: ");
-        System.out.println(pc);
-        System.out.print("7. Probabilidad de mutación: ");
-        System.out.println(pm);
-        System.out.print("8. Semilla para generación de números aleatorios: ");
-        System.out.println(seed);
+        
+        printParams();
         
         System.out.println("¿Desea modificar algún parámetro? \n (S)i / (N)o");
         String input = console.readLine();
@@ -269,9 +254,14 @@ public class GA {
                     case 8:
                         seed = Long.parseLong(val);
                         break;
+                    case 9:
+                        fAptitud = Integer.parseInt(val);
+                        break;
                 }
+                printParams();
                 System.out.println("¿Desea modificar algún parámetro? \n (S)i / (N)o");
                 decision = console.readLine();
+                
             } 
             while(decision.equalsIgnoreCase("S"));
             
@@ -281,6 +271,28 @@ public class GA {
         }
     }
     
+    public static void printParams(){
+        System.out.println("*********   Estimación de la Complejidad de Kolmogorov mediante Algoritmos Geneticos   *********     \n");
+        System.out.println("-- Parámetros del programa --");
+        System.out.print("1. Nombre del archivo de entrada: ");
+        System.out.println(inputFilename);
+        System.out.print("2. Tamaño de la población: ");
+        System.out.println(populationSize);
+        System.out.print("3. Máximo número de generaciones: ");
+        System.out.println(maxGenerations);
+        System.out.print("4. Número máximo de transiciones: ");
+        System.out.println(maxTransitions);
+        System.out.print("5. Tamaño de la cinta: ");
+        System.out.println(tapeLength);
+        System.out.print("6. Probabilidad de cruza: ");
+        System.out.println(pc);
+        System.out.print("7. Probabilidad de mutación: ");
+        System.out.println(pm);
+        System.out.print("8. Semilla para generación de números aleatorios: ");
+        System.out.println(seed);
+        System.out.print("9. Funcion de aptitud [1) Hamming 2) Suma Ponderada]: ");
+        System.out.println(fAptitud);
+    }
     public static String getTarget(String inputFilename) throws IOException {
        
         byte[] bytes = Files.readAllBytes(Paths.get(inputFilename));
