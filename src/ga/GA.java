@@ -33,7 +33,7 @@ public class GA {
     static double weights[];
     static String emptyTape;
     static long seed = 54321;
-    static int fAptitud = 1;
+    static int fitnessFunction = 1;
     
     /**
      * @param args the command line arguments
@@ -55,12 +55,13 @@ public class GA {
             
             System.out.println("Cadena objetivo: " + target + "\n");
             
-            // Construye conjunto hash de las subcadenas contenidas en target (con longitud mayor a 1)
-            substrings = buildSubstringHashSet(target);
+            if (fitnessFunction == 2) {
+                // Construye conjunto hash de las subcadenas contenidas en target (con longitud mayor a 1)
+                substrings = buildSubstringHashSet(target);
+                // Calcula pesos para función de fitness
+                weights = calculateWeights();
+            }
             
-            // Calcula pesos para función de fitness
-            weights = calculateWeights();
-                        
             // Construye cinta de ceros
             emptyTape = "";
             for (int i = 0; i < tapeLength; i++) {
@@ -255,7 +256,7 @@ public class GA {
                         seed = Long.parseLong(val);
                         break;
                     case 9:
-                        fAptitud = Integer.parseInt(val);
+                        fitnessFunction = Integer.parseInt(val);
                         break;
                 }
                 printParams();
@@ -291,7 +292,7 @@ public class GA {
         System.out.print("8. Semilla para generación de números aleatorios: ");
         System.out.println(seed);
         System.out.print("9. Funcion de aptitud [1) Hamming 2) Suma Ponderada]: ");
-        System.out.println(fAptitud);
+        System.out.println(fitnessFunction);
     }
     public static String getTarget(String inputFilename) throws IOException {
        
@@ -328,7 +329,17 @@ public class GA {
 
     public static void evaluateIndividual(Individual individual) {
         
-        /*
+        if (fitnessFunction == 1) {
+            hamming(individual);
+        }
+        else if (fitnessFunction == 2) {
+            weightedSum(individual);
+        }
+       
+    }
+    
+    public static void weightedSum(Individual individual) {
+        
         int n = individual.result.length();
         int occurrences[] = new int[target.length() + 1];
         for (int i = 0; i <= target.length(); i++) {
@@ -353,8 +364,10 @@ public class GA {
         for (int i = 0; i <= target.length(); i++) {
             individual.fitness += occurrences[i] * weights[i];
         } 
-        */
         
+    }
+    
+    public static void hamming(Individual individual) {
         individual.fitness = -target.length();
         individual.maxMatches = 0;
         if (individual.result.length() > 0) {
@@ -379,7 +392,6 @@ public class GA {
                 }
             }
         }
-        
     }
     
     public static double[] calculateWeights() {
