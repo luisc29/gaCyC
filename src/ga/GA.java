@@ -23,16 +23,16 @@ public class GA {
     static String outputFilename = "output.txt";
     static int populationSize = 100;
     static int maxTransitions = 2000;
-    static int maxGenerations = 200;
+    static int maxGenerations = 500;
     static int tapeLength = 2000;
-    static double pc = 0.85; // Crossover probability
-    static double pm = 0.05; // Mutation probability
+    static double pc = 0.95; // Crossover probability
+    static double pm = 0.005; // Mutation probability
     static int individualLength = 1024;
     static String target;
     static HashSet<String> substrings;
     static double weights[];
     static String emptyTape;
-    static long seed = 12345;
+    static long seed = 54321;
     
     /**
      * @param args the command line arguments
@@ -182,10 +182,11 @@ public class GA {
                     " después de " + g + " generaciones.");
             
             int minStates = 64, temp;
+            int maxMatches = population[0].maxMatches;
             int bestCandidate = 0;
             for (int i = 0; i <= populationSize; i++) {
-                if (population[i].maxMatches == target.length()) {
-                    temp = TM.numberOfStates(population[0].configuration, emptyTape, maxTransitions, emptyTape.length() / 2);
+                if (population[i].maxMatches == maxMatches) {
+                    temp = TM.numberOfStates(population[i].configuration, emptyTape, maxTransitions, emptyTape.length() / 2);
                     if (temp < minStates) {
                         minStates = temp;
                         bestCandidate = i;
