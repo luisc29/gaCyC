@@ -43,7 +43,7 @@ public class TM {
             if (M == 0) {
                 P++;										// Move RIGHT
                 if (P == LenTape) {
-                    System.out.println("\nRight limit of tape exceeded");
+                    //System.out.println("\nRight limit of tape exceeded");
                     return "";
                 }//endif
                 LeftTape = LeftTape + sO;
@@ -54,7 +54,7 @@ public class TM {
             } else {	// M==1
                 P--;										// Move LEFT
                 if (P < 0) {
-                    System.out.println("\nLeft limit of tape exceeded");
+                    //System.out.println("\nLeft limit of tape exceeded");
                     return "";
                 }//endif
                 RighTape = sO + RighTape;
@@ -72,8 +72,8 @@ public class TM {
                 //endif
             }//endFor
             if (Q == 63) {
-                System.out.println("\n\nHALT state was reached");
-                System.out.printf("%10.0f transitions were performed\n", (float) i);
+                //System.out.println("\n\nHALT state was reached");
+                //System.out.printf("%10.0f transitions were performed\n", (float) i);
                 long ones = 0;
                 for (int j = 0; j < Tape.length(); j++) {
                     if (Tape.substring(j, j + 1).equals("1")) {
@@ -81,19 +81,105 @@ public class TM {
                     }
                     //endIf
                 }//endFor
-                System.out.println("The productivity of this machine is " + ones);
+                //System.out.println("The productivity of this machine is " + ones);
                 return Tape;								// *** Processed Tape
             }//endif
             Steps++;
             if (Steps == 10000) {
-                System.out.print("\b\b\b\b\b\b\b\b\b\b");
-                System.out.print("\t" + i);
+                //System.out.print("\b\b\b\b\b\b\b\b\b\b");
+                //System.out.print("\t" + i);
                 Steps = 0;
             }//endIf
         }//endfor
-        System.out.println("\nMaximum number of transitions was reached");
+        //System.out.println("\nMaximum number of transitions was reached");
         return Tape;
     }//endOutTape
+    
+    public static int numberOfStates(String TM, String Tape, int N, int P) {
+        int Steps = 0;
+        String sO;
+        int Q = 0;											// Start in state Q=0
+        int PtrTM;										// Pointer to TM
+        int I, M;											// Input and Movement
+        int LenTape = Tape.length();						// Size of tape
+        
+        boolean visited[] = new boolean[64];
+        for (int i = 0; i < 64; i++) {
+            visited[i] = false;
+        }
+        
+        String LeftTape = Tape.substring(0, P);				// Left tape minus last bit
+        //                         0,1,..,P-1
+        //                         \___P___/
+        int LLT = LeftTape.length();						// Length of LeftTape
+        String RighTape = Tape.substring(P + 1);			 	// Right tape minus first bit
+        //                         P+1,..,eot
+        int LRT = RighTape.length();						// Length of RighTape
+        for (int i = 1; i <= N; i++) {
+            I = Integer.parseInt(Tape.substring(P, P + 1));		// Input symbol in Tape
+            PtrTM = Q * 16 + I * 8;								// Position in the TM
+            sO = TM.substring(PtrTM, PtrTM + 1);					// Output symbol
+            M = Integer.parseInt(TM.substring(PtrTM + 1, PtrTM + 2));	// Movement
+            if (M == 0) {
+                P++;										// Move RIGHT
+                if (P == LenTape) {
+                    //System.out.println("\nRight limit of tape exceeded");
+                    return -1;
+                }//endif
+                LeftTape = LeftTape + sO;
+                LLT++;
+                Tape = LeftTape + RighTape;
+                LRT--;
+                RighTape = RighTape.substring(1);
+            } else {	// M==1
+                P--;										// Move LEFT
+                if (P < 0) {
+                    //System.out.println("\nLeft limit of tape exceeded");
+                    return -1;
+                }//endif
+                RighTape = sO + RighTape;
+                LRT++;
+                Tape = LeftTape + RighTape;
+                LLT--;
+                LeftTape = LeftTape.substring(0, LLT);
+            }//endif
+            Q = 0;											// Next State
+            for (int j = PtrTM + 2; j < PtrTM + 8; j++) {
+                Q = Q * 2;
+                if (TM.substring(j, j + 1).equals("1")) {
+                    Q++;
+                }
+                //endif
+            }//endFor
+            visited[Q] = true;
+            if (Q == 63) {
+                //System.out.println("\n\nHALT state was reached");
+                //System.out.printf("%10.0f transitions were performed\n", (float) i);
+                long ones = 0;
+                for (int j = 0; j < Tape.length(); j++) {
+                    if (Tape.substring(j, j + 1).equals("1")) {
+                        ones++;
+                    }
+                    //endIf
+                }//endFor
+                //System.out.println("The productivity of this machine is " + ones);
+                break;								// *** Processed Tape
+            }//endif
+            Steps++;
+            if (Steps == 10000) {
+                //System.out.print("\b\b\b\b\b\b\b\b\b\b");
+                //System.out.print("\t" + i);
+                //Steps = 0;
+            }//endIf
+        }//endfor
+        //System.out.println("\nMaximum number of transitions was reached");
+        int states = 0;
+        for (int i = 0; i < 64; i++) {
+            states += (visited[i] == true ? 1 : 0);
+        }
+        return states;
+    }//endOutTape
+    
 } //endClass
 
 class FeedTM {
