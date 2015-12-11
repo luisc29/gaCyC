@@ -1,14 +1,14 @@
 inputFilename=input.txt
 
-populationSize=100
+populationSize=200
 
 maxTransations=2000
 
-maxGenerations=1000
+maxGenerations=500
 
 tapeLength=2000
 
-pc=0.8
+pc=0.95
 
 pm=0.05
 

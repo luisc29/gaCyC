@@ -30,7 +30,7 @@ public class GA {
     static int maxGenerations = 200;
     static int tapeLength = 2000;
     static double pc = 0.95; // Crossover probability
-    static double pm = 0.005; // Mutation probability
+    static double pm = 0.05; // Mutation probability
     static int individualLength = 1024;
     static String target;
     static HashSet<String> substrings;
@@ -105,6 +105,7 @@ public class GA {
             // Ejecución de algoritmo genético
             
             int g = 0;
+            double average;
             
             while (g < maxGenerations) {
                 
@@ -113,8 +114,13 @@ public class GA {
                         (100 * population[0].maxMatches / (double)target.length()) + "%) con aptitud " + population[0].fitness + ".");
                 */
                 
-                System.out.println("Generación " + g + ":\t" + population[0].maxMatches + " matches (" + 
+                System.out.println("Generacion " + g + ":\t" + population[0].maxMatches + " matches (" + 
                         (100 * population[0].maxMatches / (double)target.length()) + "%).");
+                
+                
+                
+                
+                //System.out.println(average + "," + population[0].fitness);
                 
                 adjustFitness(population);
                 sigmaTruncation(population);                
@@ -197,11 +203,13 @@ public class GA {
                 //printPopulation(population);
                 
                 g++;
-            }    
+            }   
+            
+            
             
             System.out.println("\nResultado:\t" + population[0].maxMatches + " matches (" + 
                     (100 * population[0].maxMatches / (double)target.length()) + "%) con aptitud " + population[0].fitness + 
-                    " después de " + g + " generaciones.");
+                    " despues de " + g + " generaciones.");
             
             int minStates = 64, temp;
             int maxMatches = population[0].maxMatches;
@@ -219,7 +227,7 @@ public class GA {
                 }
             }
             
-            System.out.println("Número de estados: " + minStates);
+            System.out.println("Numero de estados: " + minStates);
             System.out.println("Complejidad de Kolmogorov: " + minStates * 16);
             System.out.println(target);
             System.out.println(population[bestCandidate].result.substring(
@@ -240,15 +248,15 @@ public class GA {
         
         printParams();
         
-        System.out.println("¿Desea modificar algún parámetro? \n (S)i / (N)o");
+        System.out.println("¿Desea modificar algún parametro? \n (S)i / (N)o");
         String input = console.readLine();
         
         if (input.equalsIgnoreCase("S")) {
             String decision = "S";
             do{
-                System.out.println("¿Qué parámetro de configuración desea cambiar?:");
+                System.out.println("¿Qué parametro de configuración desea cambiar?:");
                 int num = Integer.parseInt(console.readLine());
-                System.out.println("¿Cuál es el nuevo valor?");
+                System.out.println("¿Cual es el nuevo valor?");
                 String val = console.readLine();
                 switch(num){
                     case 1:
@@ -280,7 +288,7 @@ public class GA {
                         break;
                 }
                 printParams();
-                System.out.println("¿Desea modificar algún parámetro? \n (S)i / (N)o");
+                System.out.println("¿Desea modificar algún parametro? \n (S)i / (N)o");
                 decision = console.readLine();
                 
             } 
@@ -295,23 +303,23 @@ public class GA {
     }
     
     public static void printParams(){
-        System.out.println("*********   Estimación de la Complejidad de Kolmogorov mediante Algoritmos Geneticos   *********     \n");
-        System.out.println("-- Parámetros del programa --");
+        System.out.println("*********   Estimacion de la Complejidad de Kolmogorov mediante Algoritmos Geneticos   *********     \n");
+        System.out.println("-- Parametros del programa --");
         System.out.print("1. Nombre del archivo de entrada: ");
         System.out.println(inputFilename);
-        System.out.print("2. Tamaño de la población: ");
+        System.out.print("2. Tamaño de la poblacion: ");
         System.out.println(populationSize);
-        System.out.print("3. Máximo número de generaciones: ");
+        System.out.print("3. Maximo numero de generaciones: ");
         System.out.println(maxGenerations);
-        System.out.print("4. Número máximo de transiciones: ");
+        System.out.print("4. Numero maximo de transiciones: ");
         System.out.println(maxTransitions);
         System.out.print("5. Tamaño de la cinta: ");
         System.out.println(tapeLength);
         System.out.print("6. Probabilidad de cruza: ");
         System.out.println(pc);
-        System.out.print("7. Probabilidad de mutación: ");
+        System.out.print("7. Probabilidad de mutacion: ");
         System.out.println(pm);
-        System.out.print("8. Semilla para generación de números aleatorios: ");
+        System.out.print("8. Semilla para generación de numeros aleatorios: ");
         System.out.println(seed);
         System.out.print("9. Funcion de aptitud [1.Hamming 2.Suma Ponderada]: ");
         System.out.println(fitnessFunction);
